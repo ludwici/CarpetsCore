@@ -4,13 +4,12 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -204,7 +203,7 @@ public class CarpetVariantBlock extends CarpetBlock {
     }
 
     @Override
-    protected BlockState updateShape(BlockState pState, LevelReader pLevel, ScheduledTickAccess pScheduledTickAccess, BlockPos pCurrentPos, Direction pDirection, BlockPos pDirectionPos, BlockState pDirectionState, RandomSource pRandomSource) {
+    protected BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         int faces = this.countFaces(pState);
         if (faces == 1) {
             if ((pState.getValue(UP) && pLevel.isEmptyBlock(pCurrentPos.above())) || (pState.getValue(DOWN) && pLevel.isEmptyBlock(pCurrentPos.below()))) {
