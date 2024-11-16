@@ -1,3 +1,5 @@
+# [Usage](https://github.com/ludwici/CarpetsCore/wiki)
+
 [![curseforge](https://cf.way2muchnoise.eu/full_1140721_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/carpets-core)
 [![Modrinth](https://img.shields.io/modrinth/dt/cjKKrGsM?label=Modrinth&logo=modrinth)](https://modrinth.com/mod/carpets-core/)
 ![versions](https://cf.way2muchnoise.eu/versions/1140721.svg)
