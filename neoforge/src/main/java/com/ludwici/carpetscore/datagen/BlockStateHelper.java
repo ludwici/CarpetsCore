@@ -17,7 +17,7 @@ public class BlockStateHelper {
     }
 
     public void createVariantCarpet(Block variant, Block orig) {
-        ModelFile model = new ConfiguredModel(provider.models().singleTexture(name(variant), ResourceLocation.withDefaultNamespace( "block/carpet"), "wool", provider.blockTexture(orig))).model;
+        ModelFile model = new ConfiguredModel(provider.models().singleTexture(name(variant), new ResourceLocation( "block/carpet"), "wool", provider.blockTexture(orig))).model;
 
         provider.getMultipartBuilder(variant)
                 .part().modelFile(model).addModel().condition(BlockStateProperties.DOWN, true).end()
