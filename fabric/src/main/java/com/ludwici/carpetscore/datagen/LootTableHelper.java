@@ -18,8 +18,8 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import java.util.concurrent.CompletableFuture;
 
 public class LootTableHelper extends FabricBlockLootTableProvider {
-    protected LootTableHelper(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
-        super(dataOutput, registryLookup);
+    protected LootTableHelper(FabricDataOutput dataOutput) {
+        super(dataOutput);
     }
 
     public void createVariantItemTable(Block block, Item item) {

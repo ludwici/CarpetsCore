@@ -100,7 +100,7 @@ public class CarpetVariantBlock extends CarpetBlock {
     }
 
     @Override
-    protected VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return this.shapesCache.get(pState);
     }
 
@@ -124,7 +124,7 @@ public class CarpetVariantBlock extends CarpetBlock {
     }
 
     @Override
-    protected boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
+    public boolean canBeReplaced(BlockState pState, BlockPlaceContext pUseContext) {
         BlockState blockstate = pUseContext.getLevel().getBlockState(pUseContext.getClickedPos());
 
         boolean hasParts = false;
@@ -198,12 +198,12 @@ public class CarpetVariantBlock extends CarpetBlock {
     }
 
     @Override
-    protected boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
+    public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         return this.hasFaces(this.getUpdatedState(pState, pLevel, pPos)) || (pState.getValue(DOWN) && super.canSurvive(pState, pLevel, pPos));
     }
 
     @Override
-    protected BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
+    public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
         int faces = this.countFaces(pState);
         if (faces == 1) {
             if ((pState.getValue(UP) && pLevel.isEmptyBlock(pCurrentPos.above())) || (pState.getValue(DOWN) && pLevel.isEmptyBlock(pCurrentPos.below()))) {
@@ -252,7 +252,7 @@ public class CarpetVariantBlock extends CarpetBlock {
     }
 
     @Override
-    protected BlockState rotate(BlockState pState, Rotation pRotate) {
+    public BlockState rotate(BlockState pState, Rotation pRotate) {
         return switch (pRotate) {
             case CLOCKWISE_180 -> pState.setValue(NORTH, pState.getValue(SOUTH))
                     .setValue(EAST, pState.getValue(WEST))
@@ -271,7 +271,7 @@ public class CarpetVariantBlock extends CarpetBlock {
     }
 
     @Override
-    protected BlockState mirror(BlockState pState, Mirror pMirror) {
+    public BlockState mirror(BlockState pState, Mirror pMirror) {
         return switch (pMirror) {
             case LEFT_RIGHT -> pState.setValue(NORTH, pState.getValue(SOUTH)).setValue(SOUTH, pState.getValue(NORTH));
             case FRONT_BACK -> pState.setValue(EAST, pState.getValue(WEST)).setValue(WEST, pState.getValue(EAST));
