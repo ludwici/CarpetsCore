@@ -8,8 +8,8 @@
         "${mod_author}"
     ],
     "contact": {
-        "homepage": "${mod_url}",
-        "sources": "${mod_url}"
+        "homepage": "https://github.com/ludwici/CarpetsCore",
+        "sources": "https://github.com/ludwici/CarpetsCore"
     },
     "license": "${license}",
     "icon": "${mod_id}.png",
@@ -26,7 +26,7 @@
         "fabricloader": ">=${fabric_loader_version}",
         "fabric-api": "*",
         "minecraft": "${minecraft_version}",
-        "java": ">=${java_version}"
+        "java": ">=17"
     },
     "suggests": {
         "another-mod": "*"

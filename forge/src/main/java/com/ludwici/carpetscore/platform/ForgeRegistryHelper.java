@@ -3,22 +3,22 @@ package com.ludwici.carpetscore.platform;
 import com.ludwici.carpetscore.platform.services.IRegistryHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.registries.DeferredBlock;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class NeoForgeRegistryHelper implements IRegistryHelper {
+public class ForgeRegistryHelper implements IRegistryHelper {
 
-    protected Map<String, DeferredBlock<Block>> replaceMap;
+    protected Map<String, RegistryObject<Block>> replaceMap;
 
-    public NeoForgeRegistryHelper() {
+    public ForgeRegistryHelper() {
         replaceMap = new HashMap<>();
     }
 
     @Override
     public <T> void register(String name, T block) {
-        replaceMap.put(name, (DeferredBlock<Block>) block);
+        replaceMap.put(name, (RegistryObject<Block>) block);
     }
 
     @Override
