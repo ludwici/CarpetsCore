@@ -1,10 +1,10 @@
-# CarpetsCore — Minecraft 26.2
+# CarpetsCore — Minecraft 26.3
 
 This branch contains the Fabric and NeoForge ports as independent Gradle projects, imported from the supplied source archives.
 
 | Loader | Project directory | Minecraft versions |
 | --- | --- | --- |
-| Fabric | `fabric/` | 26.2 |
+| Fabric | `fabric/` | 26.3 |
 | NeoForge | `neoforge/` | 26.2 |
 
 ### Building

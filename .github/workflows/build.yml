@@ -5,6 +5,7 @@ on:
     branches:
       - '26.1.2'
       - '26.2'
+      - '26.3'
   pull_request:
   workflow_dispatch:
 
