@@ -32,9 +32,7 @@ public class LootTableHelper extends BlockLootSubProvider{
                                 AlternativesEntry.alternatives(
                                         CarpetVariantBlock.FACE_COUNT.getPossibleValues(),
                                         value -> LootItem.lootTableItem(item)
-                                                .when(MatchBlock.blockMatches(this.blocks, block,
-                                                        StatePropertiesPredicate.Builder.properties().hasProperty(CarpetVariantBlock.FACE_COUNT, value)
-                                                )
+                                                .when(MatchBlock.blockMatches(this.blocks, block, StatePropertiesPredicate.Builder.properties().hasProperty(CarpetVariantBlock.FACE_COUNT, value)))
                                                 .apply(SetItemCountFunction.setCount(Holder.direct(new ConstantValue(value))))
 
                                 )
