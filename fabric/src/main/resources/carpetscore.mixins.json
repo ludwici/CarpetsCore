@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"package": "com.ludwici.carpetscore.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"BlockBehaviourMixin",
+		"BlockItemMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

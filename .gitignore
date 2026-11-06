@@ -1,24 +1,17 @@
-# eclipse
-bin
-*.launch
-.settings
-.metadata
-.classpath
-.project
+# Gradle and generated output
+**/.gradle/
+**/build/
+**/run/
+.gradle/
+build/
+run/
 
-# idea
-out
-*.ipr
-*.iws
+# IDEs
+.idea/
+**/.idea/
 *.iml
-.idea/*
-!.idea/scopes
+.vscode/
 
-# gradle
-build
-.gradle
-
-# other
-eclipse
-run
-runs
+# OS
+.DS_Store
+Thumbs.db

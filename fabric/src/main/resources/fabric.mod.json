@@ -1,35 +1,36 @@
 {
-    "schemaVersion": 1,
-    "id": "${mod_id}",
-    "version": "${version}",
-    "name": "${mod_name}",
-    "description": "${description}",
-    "authors": [
-        "${mod_author}"
-    ],
-    "contact": {
-        "homepage": "${mod_url}",
-        "sources": "${mod_url}"
-    },
-    "license": "${license}",
-    "icon": "${mod_id}.png",
-    "environment": "*",
-    "entrypoints": {
-        "main": [
-          "com.ludwici.carpetscore.CarpetsCoreFabric"
-        ]
-    },
-    "mixins": [
-        "${mod_id}.mixins.json"
-    ],
-    "depends": {
-        "fabricloader": ">=${fabric_loader_version}",
-        "fabric-api": "*",
-        "minecraft": "${minecraft_version}",
-        "java": ">=${java_version}"
-    },
-    "suggests": {
-        "another-mod": "*"
-    }
+	"schemaVersion": 1,
+	"id": "carpetscore",
+	"version": "${version}",
+	"name": "carpetscore",
+	"description": "Simple lib for creating multifaced blocks.",
+	"authors": [
+		"ludwici"
+	],
+	"contact": {
+	},
+	"license": "MIT",
+	"icon": "assets/carpetscore/carpetscore.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.ludwici.carpetscore.CarpetsCore"
+		],
+		"client": [
+			"com.ludwici.carpetscore.CarpetsCoreClient"
+		]
+	},
+	"mixins": [
+		"carpetscore.mixins.json",
+		{
+			"config": "carpetscore.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.18.6",
+		"minecraft": ">=26.1 <26.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
 }
-  
