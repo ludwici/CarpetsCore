@@ -2,7 +2,8 @@ package com.ludwici.carpetscore.api.datagen;
 
 import com.ludwici.carpetscore.api.block.CarpetVariantBlock;
 import net.minecraft.advancements.predicates.StatePropertiesPredicate;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Holder;
+import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
@@ -12,16 +13,16 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.predicates.MatchBlock;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ConstantValue;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 
 import java.util.Set;
 
 public class LootTableHelper extends BlockLootSubProvider{
-    protected LootTableHelper(HolderLookup.Provider provider) {
-        super(Set.of(), FeatureFlags.REGISTRY.allFlags(), provider);
+    protected LootTableHelper(LootTableSubProvider.Context context) {
+        super(Set.of(), FeatureFlags.REGISTRY.allFlags(), context);
     }
 
     public void createVariantItemTable(Block block, Item item) {
@@ -31,10 +32,10 @@ public class LootTableHelper extends BlockLootSubProvider{
                                 AlternativesEntry.alternatives(
                                         CarpetVariantBlock.FACE_COUNT.getPossibleValues(),
                                         value -> LootItem.lootTableItem(item)
-                                                .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
-                                                        .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(CarpetVariantBlock.FACE_COUNT, value))
+                                                .when(MatchBlock.blockMatches(this.blocks, block,
+                                                        StatePropertiesPredicate.Builder.properties().hasProperty(CarpetVariantBlock.FACE_COUNT, value)
                                                 )
-                                                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(value)))
+                                                .apply(SetItemCountFunction.setCount(Holder.direct(new ConstantValue(value))))
 
                                 )
                         ))
