@@ -1,7 +1,7 @@
 package com.ludwici.carpetscore.api.datagen;
 
 import com.ludwici.carpetscore.api.block.CarpetVariantBlock;
-import net.minecraft.advancements.criterion.StatePropertiesPredicate;
+import net.minecraft.advancements.predicates.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
