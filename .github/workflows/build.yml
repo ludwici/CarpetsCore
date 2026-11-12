@@ -1,0 +1,40 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - '1.21.1'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.loader }} (1.21.1)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        loader: [fabric, neoforge]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build
+        run: bash ./gradlew :${{ matrix.loader }}:build --no-daemon
+      - name: Upload distributable JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: carpetscore-${{ matrix.loader }}-1.21.1
+          path: |
+            ${{ matrix.loader }}/build/libs/*.jar
+            !${{ matrix.loader }}/build/libs/*-sources.jar
+            !${{ matrix.loader }}/build/libs/*-dev.jar
+            !${{ matrix.loader }}/build/libs/*-javadoc.jar
+          if-no-files-found: error
+          retention-days: 30
