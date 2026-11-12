@@ -1,20 +1,12 @@
-# CarpetsCore — Minecraft 26.2
+# [Usage](https://github.com/ludwici/CarpetsCore/wiki)
 
-This branch contains the Fabric and NeoForge ports as independent Gradle projects, imported from the supplied source archives.
+[![curseforge](https://cf.way2muchnoise.eu/full_1140721_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/carpets-core)
+[![Modrinth](https://img.shields.io/modrinth/dt/cjKKrGsM?label=Modrinth&logo=modrinth)](https://modrinth.com/mod/carpets-core/)
+![versions](https://cf.way2muchnoise.eu/versions/1140721.svg)
 
-| Loader | Project directory | Minecraft versions |
-| --- | --- | --- |
-| Fabric | `fabric/` | 26.2 |
-| NeoForge | `neoforge/` | 26.2 |
+![neoforge](https://github.com/thomasglasser/thomasglasser/blob/main/files/badges/cozy/supported/neoforge_64h.png?raw=true)
+![fabric](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/fabric_64h.png)
+![forge](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/forge_64h.png)
 
-### Building
-
-Requires JDK 25. From the repository root:
-
-- Windows Fabric: `cd fabric; .\gradlew.bat build`
-- Windows NeoForge: `cd neoforge; .\gradlew.bat build`
-- Linux/macOS: `cd fabric && ./gradlew build` or `cd neoforge && ./gradlew build`
-
-Build outputs appear under each project's `build/libs/` directory.
-
-
+[![patreon-singular](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/patreon-singular_64h.png)](https://www.patreon.com/ludwici)
+[![kofi-singular](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/kofi-singular-alt_64h.png)](https://ko-fi.com/ludwici)
