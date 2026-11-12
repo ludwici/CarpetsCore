@@ -1,0 +1,54 @@
+name: Publish CarpetsCore 26.3
+
+run-name: ${{ inputs.dry_run && 'Validate' || 'Publish' }} CarpetsCore 26.3
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Validate without uploading (dry run)'
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: carpetscore-26.3-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: ${{ matrix.loader }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        loader: [fabric, neoforge]
+    steps:
+      - name: Checkout Minecraft 26.3 sources
+        uses: actions/checkout@v4
+        with:
+          ref: '26.3'
+      - name: Setup Java 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Check publishing tokens
+        if: ${{ !inputs.dry_run }}
+        env:
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: |
+          test -n "$CURSEFORGE_TOKEN" || { echo "CURSEFORGE_TOKEN is not configured"; exit 1; }
+          test -n "$MODRINTH_TOKEN" || { echo "MODRINTH_TOKEN is not configured"; exit 1; }
+      - name: Publish to CurseForge and Modrinth
+        working-directory: ${{ matrix.loader }}
+        env:
+          CURSEFORGE_TOKEN: ${{ inputs.dry_run && 'dry-run-only' || secrets.CURSEFORGE_TOKEN }}
+          MODRINTH_TOKEN: ${{ inputs.dry_run && 'dry-run-only' || secrets.MODRINTH_TOKEN }}
+        run: bash ./gradlew publishMods -PpublishDryRun=${{ inputs.dry_run }} --no-daemon --stacktrace
