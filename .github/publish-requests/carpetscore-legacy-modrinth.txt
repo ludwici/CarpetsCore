@@ -1,0 +1,7 @@
+CarpetsCore Modrinth release request
+Minecraft 26.1.2: Fabric 1.3.0, NeoForge 1.3.1
+Minecraft 26.2: Fabric 1.3.1, NeoForge 1.3.1
+Published project: cjKKrGsM
+Changelog: intentionally empty
+Platforms: Modrinth only (not CurseForge)
+Explicitly requested by repository owner in this conversation.
