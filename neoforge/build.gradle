@@ -96,6 +96,7 @@ neoForge.ideSyncTask generateModMetadata
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
+            artifactId = "${mod_id}-neo-${minecraft_version}"
             from components.java
         }
     }
