@@ -3,6 +3,10 @@ name: Publish CarpetsCore 26.3
 run-name: ${{ inputs.dry_run && 'Validate' || 'Publish' }} CarpetsCore 26.3
 
 on:
+  push:
+    branches: ['1.21.3']
+    paths:
+      - '.github/publish-requests/carpetscore-26.3.txt'
   workflow_dispatch:
     inputs:
       dry_run:
@@ -20,6 +24,7 @@ concurrency:
 
 jobs:
   publish:
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-carpetscore-26.3]'))
     name: ${{ matrix.loader }}
     runs-on: ubuntu-latest
     strategy:
@@ -51,4 +56,4 @@ jobs:
         env:
           CURSEFORGE_TOKEN: ${{ inputs.dry_run && 'dry-run-only' || secrets.CURSEFORGE_TOKEN }}
           MODRINTH_TOKEN: ${{ inputs.dry_run && 'dry-run-only' || secrets.MODRINTH_TOKEN }}
-        run: bash ./gradlew publishMods -PpublishDryRun=${{ inputs.dry_run }} --no-daemon --stacktrace
+        run: bash ./gradlew publishMods -PpublishDryRun=${{ github.event_name == 'push' && 'false' || inputs.dry_run }} --no-daemon --stacktrace
