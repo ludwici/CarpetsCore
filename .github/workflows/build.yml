@@ -26,3 +26,14 @@ jobs:
       - name: Build
         working-directory: ${{ matrix.loader }}
         run: bash ./gradlew build --no-daemon
+      - name: Upload distributable JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: carpetscore-${{ matrix.loader }}-${{ github.ref_name }}
+          path: |
+            ${{ matrix.loader }}/build/libs/*.jar
+            !${{ matrix.loader }}/build/libs/*-sources.jar
+            !${{ matrix.loader }}/build/libs/*-dev.jar
+            !${{ matrix.loader }}/build/libs/*-javadoc.jar
+          if-no-files-found: error
+          retention-days: 30
