@@ -1,0 +1,52 @@
+name: Publish CarpetsCore 26.1.2 and 26.2 to Modrinth
+
+run-name: ${{ inputs.dry_run && 'Validate' || 'Publish' }} CarpetsCore 26.1.2 / 26.2 on Modrinth
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Validate without uploading (dry run)'
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: carpetscore-legacy-modrinth-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: ${{ matrix.minecraft }} / ${{ matrix.loader }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        minecraft: ['26.1.2', '26.2']
+        loader: [fabric, neoforge]
+    steps:
+      - name: Checkout Minecraft ${{ matrix.minecraft }} sources
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.minecraft }}
+      - name: Setup Java 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Check Modrinth token
+        if: ${{ !inputs.dry_run }}
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: |
+          test -n "$MODRINTH_TOKEN" || { echo "MODRINTH_TOKEN is not configured"; exit 1; }
+      - name: Publish to Modrinth
+        working-directory: ${{ matrix.loader }}
+        env:
+          MODRINTH_TOKEN: ${{ inputs.dry_run && 'dry-run-only' || secrets.MODRINTH_TOKEN }}
+        run: bash ./gradlew publishMods -PpublishDryRun=${{ inputs.dry_run }} --no-daemon --stacktrace
