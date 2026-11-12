@@ -26,6 +26,11 @@ jobs:
       - name: Build
         working-directory: ${{ matrix.loader }}
         run: bash ./gradlew build --no-daemon
+      - name: Validate Modrinth publication (dry run)
+        working-directory: ${{ matrix.loader }}
+        env:
+          MODRINTH_TOKEN: dry-run-only
+        run: bash ./gradlew publishMods -PpublishDryRun=true --no-daemon --stacktrace
       - name: Upload distributable JAR
         uses: actions/upload-artifact@v4
         with:

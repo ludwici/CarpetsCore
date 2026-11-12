@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id 'me.modmuss50.mod-publish-plugin' version '2.2.1'
     id 'net.neoforged.moddev' version '2.0.141'
     id 'idea'
 }
@@ -115,5 +116,21 @@ idea {
     module {
         downloadSources = true
         downloadJavadoc = true
+    }
+}
+
+publishMods {
+    file = tasks.named("jar", Jar).flatMap { it.archiveFile }
+    changelog = ""
+    version = "${minecraft_version}-${mod_version}-neoforge"
+    displayName = "Carpets Core ${mod_version} (NeoForge ${minecraft_version})"
+    type = STABLE
+    modLoaders.add("neoforge")
+    dryRun = providers.gradleProperty("publishDryRun").map { it.toBoolean() }.orElse(false)
+
+    modrinth {
+        projectId = "cjKKrGsM"
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        minecraftVersions.add(minecraft_version)
     }
 }
