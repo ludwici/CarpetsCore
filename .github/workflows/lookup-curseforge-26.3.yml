@@ -1,0 +1,59 @@
+name: Retrieve Carpets Core 26.3 CurseForge file IDs
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '26.3'
+    paths:
+      - '.github/LOOKUP_CF_26_3'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query file metadata endpoints
+        env:
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          from urllib.request import Request, urlopen
+          from urllib.error import HTTPError, URLError
+
+          token = os.environ.get("CURSEFORGE_TOKEN", "")
+          targets = [
+              ("author-file-list", "https://minecraft.curseforge.com/api/projects/1140721/files", {"X-Api-Token": token}),
+              ("author-project", "https://minecraft.curseforge.com/api/projects/1140721", {"X-Api-Token": token}),
+              ("official-core", "https://api.curseforge.com/v1/mods/1140721/files?index=0&pageSize=50", {"x-api-key": token}),
+              ("public-site-api", "https://www.curseforge.com/api/v1/mods/1140721/files", {}),
+              ("cfwidget", "https://api.cfwidget.com/1140721", {}),
+              ("public-files-page", "https://www.curseforge.com/minecraft/mc-mods/carpets-core/files/all", {}),
+          ]
+          for name, url, credentials in targets:
+              try:
+                  req = Request(url, headers={"User-Agent": "CarpetsCore/26.3-release-verification", "Accept": "application/json, text/html", **credentials})
+                  with urlopen(req, timeout=12) as resp:
+                      data = resp.read(500000).decode("utf-8", "replace")
+                      status = resp.status
+                  found = re.findall(r"(?:carpetscore[-_](?:fabric|neo)[-_]26\.3[^\s\"<>]{0,70}|\"(?:fileName|id)\"\s*:\s*(?:\"[^\"]{0,100}\"|\d+))", data, flags=re.I)
+                  if data[:1] in "[{":
+                      try:
+                          parsed = json.loads(data)
+                          obj = parsed.get("data", parsed) if isinstance(parsed, dict) else parsed
+                          files = obj if isinstance(obj,list) else obj.get("files",[]) if isinstance(obj,dict) else []
+                          found.extend([f"{entry.get('fileName')} ID={entry.get('id')}" for entry in files if isinstance(entry,dict) and "26.3" in str(entry.get("fileName",""))])
+                      except ValueError: pass
+                  print(f"{name}: HTTP {status}, bytes={len(data)}; hits={found[:20]}")
+              except HTTPError as exc:
+                  print(f"{name}: HTTP {exc.code}")
+              except URLError as exc:
+                  print(f"{name}: network error {type(exc.reason).__name__}")
+              except Exception as exc:
+                  print(f"{name}: {type(exc).__name__}: {str(exc)[:160]}")
+          PY
