@@ -2,11 +2,6 @@ name: Publish Carpets Core 26.2
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - '26.2'
-    paths:
-      - '.github/RELEASE_26_2'
 
 permissions:
   contents: read
