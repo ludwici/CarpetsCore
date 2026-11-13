@@ -81,6 +81,9 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             loader_version_range   : loader_version_range,
             mod_id                 : mod_id,
             mod_name               : mod_name,
+            mod_url                : mod_url,
+            mod_issues_url         : mod_issues_url,
+            mod_license_url        : mod_license_url,
             mod_license            : mod_license,
             mod_version            : mod_version,
             mod_authors            : mod_authors,
@@ -121,16 +124,26 @@ idea {
 
 publishMods {
     file = tasks.named("jar", Jar).flatMap { it.archiveFile }
-    changelog = ""
-    version = "${minecraft_version}-${mod_version}-neoforge"
-    displayName = "Carpets Core ${mod_version} (NeoForge ${minecraft_version})"
+    changelog = "Updated mod metadata"
+    version = "${minecraft_version}-${mod_version}"
+    displayName = tasks.named("jar", Jar).flatMap { it.archiveFile }.map { it.asFile.name }
     type = STABLE
     modLoaders.add("neoforge")
     dryRun = providers.gradleProperty("publishDryRun").map { it.toBoolean() }.orElse(false)
 
+    curseforge {
+        projectId = "1140721"
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        minecraftVersions.add(minecraft_version)
+        javaVersions.add(JavaVersion.VERSION_25)
+        client = true
+        server = true
+    }
+
     modrinth {
         projectId = "cjKKrGsM"
         accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        version = "${minecraft_version}-${mod_version}-neoforge"
         minecraftVersions.add(minecraft_version)
     }
 }

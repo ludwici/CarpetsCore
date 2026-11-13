@@ -2,13 +2,16 @@
 	"schemaVersion": 1,
 	"id": "carpetscore",
 	"version": "${version}",
-	"name": "carpetscore",
+	"name": "Carpets Core",
 	"description": "Simple lib for creating multifaced blocks.",
 	"authors": [
 		"ludwici"
 	],
 	"contact": {
-	},
+        "homepage": "https://www.curseforge.com/minecraft/mc-mods/carpets-core",
+        "sources": "https://github.com/ludwici/CarpetsCore",
+        "issues": "https://github.com/ludwici/CarpetsCore/issues"
+    },
 	"license": "MIT",
 	"icon": "assets/carpetscore/carpetscore.png",
 	"environment": "*",

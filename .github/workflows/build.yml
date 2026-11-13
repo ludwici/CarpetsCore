@@ -26,11 +26,55 @@ jobs:
       - name: Build
         working-directory: ${{ matrix.loader }}
         run: bash ./gradlew build --no-daemon
-      - name: Validate Modrinth publication (dry run)
+      - name: Validate CurseForge and Modrinth publication (dry run)
         working-directory: ${{ matrix.loader }}
         env:
           MODRINTH_TOKEN: dry-run-only
+          CURSEFORGE_TOKEN: dry-run-only
         run: bash ./gradlew publishMods -PpublishDryRun=true --no-daemon --stacktrace
+      - name: Validate mod metadata and icon
+        working-directory: ${{ matrix.loader }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import struct
+          import tomllib
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          loader = "${{ matrix.loader }}"
+          jars = [p for p in Path("build/libs").glob("*.jar") if not any(marker in p.name for marker in ("-sources", "-dev", "-javadoc"))]
+          assert len(jars) == 1, f"Expected one distributable JAR: {jars}"
+          with ZipFile(jars[0]) as jar:
+              files = set(jar.namelist())
+              if loader == "neoforge":
+                  metadata = tomllib.loads(jar.read("META-INF/neoforge.mods.toml").decode("utf-8"))
+                  mod = next(m for m in metadata["mods"] if m["modId"] == "carpetscore")
+                  assert mod["version"] == "1.3.2"
+                  assert mod["iconFile"] == "carpetscore.png"
+                  assert mod["displayURL"] == "https://www.curseforge.com/minecraft/mc-mods/carpets-core"
+                  assert metadata["issueTrackerURL"] == "https://github.com/ludwici/CarpetsCore/issues"
+                  assert metadata["licenseURL"] == "https://opensource.org/license/mit"
+                  assert "logoFile" not in mod
+                  icon = mod["iconFile"]
+              else:
+                  mod = json.loads(jar.read("fabric.mod.json"))
+                  assert mod["id"] == "carpetscore"
+                  assert mod["name"] == "Carpets Core"
+                  assert mod["version"] == "1.3.2"
+                  assert mod["contact"]["homepage"] == "https://www.curseforge.com/minecraft/mc-mods/carpets-core"
+                  assert mod["contact"]["sources"] == "https://github.com/ludwici/CarpetsCore"
+                  assert mod["contact"]["issues"] == "https://github.com/ludwici/CarpetsCore/issues"
+                  icon = mod["icon"]
+
+              assert icon in files, f"Missing icon in JAR: {icon}"
+              png = jar.read(icon)
+              assert png[:8] == bytes.fromhex("89504e470d0a1a0a"), "Invalid PNG"
+              width, height = struct.unpack(">II", png[16:24])
+              assert (width, height) == (400, 400), f"Unexpected icon dimensions: {width}x{height}"
+              print(f"Validated {loader}: {jars[0]} and {icon}")
+          PY
+
       - name: Upload distributable JAR
         uses: actions/upload-artifact@v4
         with:
