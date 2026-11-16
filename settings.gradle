@@ -23,5 +23,13 @@ plugins {
 // This should match the folder name of the project, or else IDEA may complain (see https://youtrack.jetbrains.com/issue/IDEA-317606)
 rootProject.name = 'CarpetsCore'
 include('common')
-include('fabric')
-include('forge')
+
+def buildLoader = providers.gradleProperty('buildLoader').orNull
+if (buildLoader == null) {
+    include('fabric')
+    include('forge')
+} else if (buildLoader == 'fabric' || buildLoader == 'forge') {
+    include(buildLoader)
+} else {
+    throw new GradleException("Unsupported buildLoader: ${buildLoader}")
+}
