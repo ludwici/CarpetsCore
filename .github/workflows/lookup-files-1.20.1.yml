@@ -1,0 +1,47 @@
+name: Check Carpets Core 1.20.1 CurseForge IDs
+
+on:
+  push:
+    branches:
+      - '1.20.1'
+    paths:
+      - '.github/LOOKUP_CARPETS_1201'
+
+permissions:
+  contents: read
+
+jobs:
+  ids:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read public CurseForge file list
+        env:
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from urllib.request import Request, urlopen
+          from urllib.error import HTTPError
+          token = os.environ.get("CURSEFORGE_TOKEN", "")
+          endpoints = [
+              ("public-site", "https://www.curseforge.com/api/v1/mods/1140721/files", {}),
+              ("cfwidget", "https://api.cfwidget.com/1140721", {}),
+              ("author", "https://minecraft.curseforge.com/api/projects/1140721/files", {"X-Api-Token":token}),
+              ("curse-api", "https://api.curseforge.com/v1/mods/1140721/files?index=0&pageSize=50", {"x-api-key":token}),
+          ]
+          for label,url,headers in endpoints:
+              try:
+                  with urlopen(Request(url,headers={"User-Agent":"CarpetsCore/1.20.1-validation","Accept":"application/json",**headers}),timeout=25) as response:
+                      data=json.load(response)
+                  files=data.get("data",data) if isinstance(data,dict) else data
+                  if isinstance(files,dict):
+                      files=files.get("files",files.get("data",[]))
+                  if isinstance(files,list):
+                      targets=[(f.get("id"),f.get("fileName",f.get("name")),f.get("gameVersions")) for f in files if isinstance(f,dict) and ("1.20.1" in str(f.get("fileName",f.get("name","")))) ]
+                  else:
+                      targets=[]
+                  print(f"{label}: targets={targets[:30]}")
+              except Exception as exc:
+                  print(f"{label}: {type(exc).__name__} {str(exc)[:140]}")
+          PY
