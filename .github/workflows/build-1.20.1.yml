@@ -42,7 +42,7 @@ jobs:
         run: |
           chmod +x ./gradlew
           for attempt in 1 2 3; do
-            if ./gradlew :${{ matrix.loader }}:build --no-daemon --stacktrace -Dorg.gradle.internal.http.connectionTimeout=60000 -Dorg.gradle.internal.http.socketTimeout=120000; then
+            if ./gradlew :${{ matrix.loader }}:build -PbuildLoader=${{ matrix.loader }} --no-daemon --stacktrace -Dorg.gradle.internal.http.connectionTimeout=60000 -Dorg.gradle.internal.http.socketTimeout=120000; then
               exit 0
             fi
             if [ "$attempt" -eq 3 ]; then
