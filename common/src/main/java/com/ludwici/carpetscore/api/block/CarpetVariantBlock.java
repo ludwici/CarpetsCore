@@ -151,7 +151,7 @@ public class CarpetVariantBlock extends CarpetBlock {
         return (blockstate.is(this) && same) && faces < PROPERTY_BY_DIRECTION.size();
     }
 
-    private BlockState getUpdatedState(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
+    protected BlockState getUpdatedState(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
         BlockPos blockpos = pPos.above();
 
         BlockState blockstate = null;
@@ -182,7 +182,7 @@ public class CarpetVariantBlock extends CarpetBlock {
         return pState;
     }
 
-    private boolean hasFaces(BlockState pState) {
+    protected boolean hasFaces(BlockState pState) {
         return this.countFaces(pState) > 0;
     }
 
