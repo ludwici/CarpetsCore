@@ -1,6 +1,7 @@
 plugins {
     id 'idea'
     id 'maven-publish'
+    id 'me.modmuss50.mod-publish-plugin'
     id 'net.minecraftforge.gradle'
     id 'org.spongepowered.mixin'
 }
@@ -105,5 +106,23 @@ publishing {
         maven {
             url "file://" + System.getenv("local_maven")
         }
+    }
+}
+publishMods {
+    file = tasks.named("jar", Jar).flatMap { it.archiveFile }
+    changelog = "Added NoGravityVariantBlock for Minecraft 1.20.1. API version 1.1.0."
+    version = "${minecraft_version}-${version}"
+    displayName = tasks.named("jar", Jar).flatMap { it.archiveFile }.map { it.asFile.name }
+    type = STABLE
+    modLoaders.add("forge")
+    dryRun = providers.gradleProperty("publishDryRun").map { it.toBoolean() }.orElse(false)
+
+    curseforge {
+        projectId = "1140721"
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        minecraftVersions.add(minecraft_version)
+        javaVersions.add(JavaVersion.VERSION_17)
+        client = true
+        server = true
     }
 }
