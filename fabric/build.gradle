@@ -70,7 +70,7 @@ publishing {
 }
 publishMods {
     file = tasks.named("remapJar").flatMap { it.archiveFile }
-    changelog = "Added NoGravityVariantBlock for Minecraft 1.20.1. API version 1.1.0."
+    changelog = "Backported the new NoGravityVariantBlock block type to Minecraft 1.20.1."
     version = "${minecraft_version}-${project.version}"
     displayName = tasks.named("remapJar").flatMap { it.archiveFile }.map { it.asFile.name }
     type = STABLE
@@ -84,6 +84,14 @@ publishMods {
         javaVersions.add(JavaVersion.VERSION_17)
         client = true
         server = true
+        requires("fabric-api")
+    }
+
+    modrinth {
+        projectId = "cjKKrGsM"
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        version = "${minecraft_version}-${project.version}-${project.name}"
+        minecraftVersions.add(minecraft_version)
         requires("fabric-api")
     }
 }
