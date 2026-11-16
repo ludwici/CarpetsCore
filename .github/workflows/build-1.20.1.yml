@@ -1,0 +1,77 @@
+name: Build Carpets Core 1.20.1
+
+on:
+  push:
+    branches:
+      - '1.20.1'
+    paths:
+      - 'common/**'
+      - 'fabric/**'
+      - 'forge/**'
+      - 'build.gradle'
+      - 'settings.gradle'
+      - 'gradle.properties'
+      - 'gradle/**'
+      - 'gradlew'
+      - '.github/workflows/build-1.20.1.yml'
+  pull_request:
+    branches:
+      - '1.20.1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build ${{ matrix.loader }} 1.20.1
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        loader: [forge, fabric]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build ${{ matrix.loader }}
+        run: |
+          chmod +x ./gradlew
+          ./gradlew :${{ matrix.loader }}:build --no-daemon --stacktrace
+      - name: Check version and packaged API
+        env:
+          LOADER: ${{ matrix.loader }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          loader = os.environ["LOADER"]
+          expected = f"carpetscore-{loader}-1.20.1-1.1.0.jar"
+          path = Path(loader) / "build" / "libs" / expected
+          assert path.is_file(), f"Missing distribution JAR: {path}"
+          with ZipFile(path) as archive:
+              names = set(archive.namelist())
+              for cls in ("CarpetVariantBlock", "NoGravityVariantBlock"):
+                  entry = f"com/ludwici/carpetscore/api/block/{cls}.class"
+                  assert entry in names, f"{entry} missing in {path}"
+              if loader == "forge":
+                  meta = archive.read("META-INF/mods.toml").decode("utf-8")
+                  assert 'version = "1.1.0"' in meta or 'version="1.1.0"' in meta, "Incorrect Forge mod version"
+              else:
+                  meta = json.loads(archive.read("fabric.mod.json"))
+                  assert meta["version"] == "1.1.0", "Incorrect Fabric mod version"
+          print(f"Verified Carpets Core {loader} 1.20.1 version 1.1.0 and NoGravityVariantBlock")
+          PY
+      - name: Upload ${{ matrix.loader }} JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: carpetscore-${{ matrix.loader }}-1.20.1-1.1.0
+          path: ${{ matrix.loader }}/build/libs/carpetscore-${{ matrix.loader }}-1.20.1-1.1.0.jar
+          if-no-files-found: error
