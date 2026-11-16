@@ -10,3 +10,10 @@
 
 [![patreon-singular](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/patreon-singular_64h.png)](https://www.patreon.com/ludwici)
 [![kofi-singular](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/kofi-singular-alt_64h.png)](https://ko-fi.com/ludwici)
+## Minecraft 1.20.1 — Carpets Core 1.1.0
+
+Added `com.ludwici.carpetscore.api.block.NoGravityVariantBlock` to the Forge and Fabric versions. It extends `CarpetVariantBlock` and keeps its placed faces when support blocks are removed. The class supports both constructors, with and without an optional replacement item, and allows adding a face while sneaking.
+
+The new API is intended for Copper Deco and other mods using multi-face decorative blocks. No changes are required for existing `CarpetVariantBlock` implementations.
+
+This branch targets Minecraft 1.20.1 and Java 17. Builds are checked by GitHub Actions for both loaders.
