@@ -41,7 +41,9 @@ jobs:
                       targets=[(f.get("id"),f.get("fileName",f.get("name")),f.get("gameVersions")) for f in files if isinstance(f,dict) and ("1.20.1" in str(f.get("fileName",f.get("name","")))) ]
                   else:
                       targets=[]
-                  print(f"{label}: targets={targets[:30]}")
+                  print(f"{label}: type={type(data).__name__}, keys={list(data)[:12] if isinstance(data,dict) else 'list'}, targets={targets[:30]}")
+                  if label == "public-site":
+                      print("public-site sample:", json.dumps(data, ensure_ascii=False)[:3200])
               except Exception as exc:
                   print(f"{label}: {type(exc).__name__} {str(exc)[:140]}")
           PY
