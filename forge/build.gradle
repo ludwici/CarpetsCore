@@ -111,7 +111,7 @@ publishing {
 publishMods {
     file = tasks.named("jar", Jar).flatMap { it.archiveFile }
     changelog = "Added NoGravityVariantBlock for Minecraft 1.20.1. API version 1.1.0."
-    version = "${minecraft_version}-${version}"
+    version = "${minecraft_version}-${project.version}"
     displayName = tasks.named("jar", Jar).flatMap { it.archiveFile }.map { it.asFile.name }
     type = STABLE
     modLoaders.add("forge")
