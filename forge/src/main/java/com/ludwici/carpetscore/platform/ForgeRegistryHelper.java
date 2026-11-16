@@ -24,6 +24,10 @@ public class ForgeRegistryHelper implements IRegistryHelper {
     @Override
     public Block replace(Block block) {
         String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
-        return replaceMap.get(name).get();
+        RegistryObject<Block> replacement = replaceMap.get(name);
+        if (replacement == null) {
+            return null;
+        }
+        return replacement.get();
     }
 }
