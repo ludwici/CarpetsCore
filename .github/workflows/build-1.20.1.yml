@@ -41,7 +41,16 @@ jobs:
       - name: Build ${{ matrix.loader }}
         run: |
           chmod +x ./gradlew
-          ./gradlew :${{ matrix.loader }}:build --no-daemon --stacktrace
+          for attempt in 1 2 3; do
+            if ./gradlew :${{ matrix.loader }}:build --no-daemon --stacktrace -Dorg.gradle.internal.http.connectionTimeout=60000 -Dorg.gradle.internal.http.socketTimeout=120000; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              exit 1
+            fi
+            echo "Gradle build attempt $attempt failed; retrying"
+            sleep 15
+          done
       - name: Check version and packaged API
         env:
           LOADER: ${{ matrix.loader }}
